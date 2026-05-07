@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quest Timer</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      font-family: -apple-system, sans-serif;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    .icon { font-size: 48px; margin-bottom: 16px; }
+    .label { font-size: 14px; opacity: 0.6; letter-spacing: 3px; 
+             text-transform: uppercase; margin-bottom: 8px; }
+    #timer {
+      font-size: 80px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+    .hint { 
+      margin-top: 24px; 
+      opacity: 0.5; 
+      font-size: 14px; 
+      max-width: 260px; 
+      line-height: 1.6; 
+    }
+    #done-msg { display: none; }
+    #timer-section { display: block; }
+  </style>
+</head>
+<body>
+
+  <div id="timer-section">
+    <div class="icon">🏛️</div>
+    <div class="label">Verbleibende Zeit</div>
+    <div id="timer">3:00</div>
+    <p class="hint">Betrachte dein gewähltes Gebäude aufmerksam</p>
+  </div>
+
+  <div id="done-msg">
+    <div class="icon">✅</div>
+    <p style="font-size:22px; font-weight:600;">Zeit abgelaufen!</p>
+    <p class="hint">Weiter in der App...</p>
+  </div>
+
+  <script>
+    // URL deines Quest-Completed-Screens in Glide eintragen:
+    const GLIDE_COMPLETED_URL = "HIER_DEINE_GLIDE_URL_EINTRAGEN";
+
+    let seconds = 180;
+
+    function updateDisplay() {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      document.getElementById('timer').textContent =
+        m + ':' + (s < 10 ? '0' : '') + s;
+    }
+
+    const interval = setInterval(() => {
+      seconds--;
+      updateDisplay();
+
+      if (seconds <= 0) {
+        clearInterval(interval);
+        document.getElementById('timer-section').style.display = 'none';
+        document.getElementById('done-msg').style.display = 'block';
+
+        // Nach 1,5 Sek. automatisch zur nächsten Glide-Seite navigieren
+        setTimeout(() => {
+          window.top.location.href = GLIDE_COMPLETED_URL;
+        }, 1500);
+      }
+    }, 1000);
+  </script>
+
+</body>
+</html>
